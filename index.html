@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b2a4a">
+<title>EdoumMoya — Notes</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--pri:#0d4f8b;--pri2:#0b2a4a;--acc:#e8a317;--ok:#1b7f3b;--bad:#c0392b;--bg:#eef2f7;--card:#fff;--txt:#1b2633;--mut:#66758a;--line:#d9e1ea}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:linear-gradient(135deg,var(--pri2),var(--pri));color:#fff;padding:12px 14px 10px;box-shadow:0 2px 8px #0003}
+header .t{display:flex;align-items:center;gap:8px}
+header h1{font-size:19px;margin:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .v{background:var(--acc);color:#1b1b1b;font-weight:700;font-size:12px;border-radius:12px;padding:2px 9px}
+header .s{font-size:13px;opacity:.9;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#net{display:flex;align-items:center;gap:8px;font-size:13px;padding:7px 14px;background:#fff;border-bottom:1px solid var(--line)}
+#net .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);flex:none}
+#net.off .dot{background:var(--bad)}
+#net .grow{flex:1}
+main{padding:12px;max-width:720px;margin:0 auto}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px #0001}
+h2{font-size:17px;margin:0 0 10px}
+label{display:block;font-size:14px;color:var(--mut);margin:10px 0 4px}
+input,select{width:100%;font-size:17px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--txt)}
+input:focus{outline:2px solid var(--pri);border-color:var(--pri)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:10px;padding:12px 16px;font-size:16px;font-weight:600;background:var(--pri);color:#fff;cursor:pointer}
+.btn.sec{background:#e3eaf3;color:var(--pri2)}
+.btn.ok{background:var(--ok)}
+.btn.sm{padding:7px 11px;font-size:14px}
+.btn:disabled{opacity:.5}
+.full{width:100%;margin-top:14px}
+.muted{color:var(--mut);font-size:14px}
+.err{color:var(--bad);font-size:14px;margin-top:8px}
+.sug{border:1px solid var(--line);border-radius:10px;margin-top:4px;max-height:220px;overflow:auto;background:#fff}
+.sug div{padding:10px 12px;border-bottom:1px solid var(--line)}
+.sug div:last-child{border:0}
+.item{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff;cursor:pointer}
+.item b{display:block}
+.item .grow{flex:1;min-width:0}
+.badge{font-size:12px;border-radius:10px;padding:2px 8px;background:#fff3d6;color:#7a5200;white-space:nowrap}
+.badge.g{background:#e3f4e8;color:var(--ok)}
+.seqs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px}
+.seqs button{flex:1 0 auto;min-width:64px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 6px;font-size:14px;color:var(--txt)}
+.seqs button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.seqs small{display:block;font-size:11px;opacity:.8}
+table{width:100%;border-collapse:collapse}
+td{padding:6px 4px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.n{width:30px;color:var(--mut);font-size:13px;text-align:right}
+td.nm{font-size:15px}
+td.in{width:92px}
+td.in input{text-align:center;padding:9px 4px;font-size:18px;font-weight:600}
+td.in input.pend{background:#fff8e6;border-color:var(--acc)}
+td.in input.bad{background:#fdecea;border-color:var(--bad)}
+td.in input:disabled{background:#f2f4f7;color:#444}
+.stats{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.stats span{background:#eef3f9;border-radius:8px;padding:4px 9px;font-size:13px}
+.bar{position:sticky;bottom:0;background:var(--bg);padding:10px 0 4px;display:flex;gap:8px}
+.bar .btn{flex:1}
+.lock{background:#fdecea;color:var(--bad);border-radius:10px;padding:9px 12px;font-size:14px;margin:8px 0}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#1b2633;color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;max-width:90%;opacity:0;transition:.25s;pointer-events:none;z-index:9}
+#toast.on{opacity:1}
+.foot{text-align:center;color:var(--mut);font-size:11px;margin:16px 0 30px}
+</style>
+</head>
+<body>
+<header><div class="t"><h1 id="hT">EdoumMoya — Notes</h1><span class="v">Enseignant</span></div><div class="s" id="hS">Saisie des notes sur téléphone</div></header>
+<div id="net"><span class="dot"></span><span class="grow" id="netT">…</span><button class="btn sm sec" id="netB" onclick="syncAll(true)">Envoyer</button></div>
+<main id="app"></main>
+<div id="toast"></div>
+<script>
+"use strict";
+/* EdoumMoya — page des enseignants (saisie des notes sur téléphone, avec ou sans réseau)
+   Compatible avec EdoumMoya V42+ : em/<clé>/pub/meta, pub/u/<uid>, in/<uid>/<classe|matière>/s<n> */
+const APPV="2.0";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const SEQ=[1,2,3,4,5,6];
+let toastT;function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove("on"),3200)}
+
+/* ---------- configuration (lien envoyé par l'établissement) ---------- */
+function readHash(){const h=new URLSearchParams(location.hash.replace(/^#/,""));const u=h.get("u"),k=h.get("k"),a=h.get("a");
+  if(u&&k&&a)return{u:u.replace(/\/+$/,""),k,a,x:h.get("x")||""};return null}
+let CFG=null;
+try{CFG=JSON.parse(localStorage.getItem("em_cfg")||"null")}catch(e){}
+const fromHash=readHash();
+if(fromHash){if(!CFG||CFG.u!==fromHash.u||CFG.k!==fromHash.k){CFG=fromHash}else CFG=fromHash;
+  try{localStorage.setItem("em_cfg",JSON.stringify(CFG))}catch(e){}
+  history.replaceState(null,"",location.pathname+location.search)}
+const NS=()=>"em_"+(CFG?CFG.k:"x")+"_";
+function lsGet(k,d){try{const v=localStorage.getItem(NS()+k);return v==null?d:JSON.parse(v)}catch(e){return d}}
+function lsSet(k,v){try{localStorage.setItem(NS()+k,JSON.stringify(v))}catch(e){toast("Mémoire du téléphone pleine")}}
+function lsDel(k){try{localStorage.removeItem(NS()+k)}catch(e){}}
+
+/* ---------- état ---------- */
+let META=null,AUTH=null,PUB=null,INC={},PEND={},ERR={},CUR=null,BUSY=false;
+function loadState(){META=lsGet("meta",null);AUTH=lsGet("auth",null);PUB=lsGet("pub",null);INC=lsGet("inc",{});PEND=lsGet("pend",{});ERR=lsGet("err",{})}
+const host=()=>new URL(CFG.u).host;
+const base=()=>CFG.u+"/em/"+CFG.k;
+const mailOf=id=>("e"+id).toLowerCase()+"@"+host();
+const seg=s=>encodeURIComponent(s);
+
+/* ---------- réseau ---------- */
+async function tfetch(url,opt,ms){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms||20000);
+  try{return await fetch(url,{...(opt||{}),signal:c.signal,cache:"no-store"})}catch(e){throw new Error("NET")}finally{clearTimeout(t)}}
+async function authCall(action,body){const r=await tfetch((CFG.x||"https://identitytoolkit.googleapis.com/v1/")+"accounts:"+action+"?key="+encodeURIComponent(CFG.a),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error((j.error&&j.error.message)||("HTTP "+r.status));return j}
+async function token(){
+  if(!AUTH)throw new Error("AUTH");
+  if(AUTH.idToken&&Date.now()<AUTH.exp)return AUTH.idToken;
+  const url=(CFG.x?CFG.x.replace(/identitytoolkit[^/]*\/v1\/?$/,"securetoken.googleapis.com/v1/"):"https://securetoken.googleapis.com/v1/")+"token?key="+encodeURIComponent(CFG.a);
+  const r=await tfetch(url,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"grant_type=refresh_token&refresh_token="+encodeURIComponent(AUTH.refresh)});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok){const m=(j.error&&j.error.message)||"";if(/TOKEN_EXPIRED|USER_DISABLED|USER_NOT_FOUND|INVALID_REFRESH_TOKEN/.test(m)){AUTH.dead=true;lsSet("auth",AUTH)}throw new Error(AUTH.dead?"AUTH":"HTTP "+r.status)}
+  AUTH.idToken=j.id_token;AUTH.refresh=j.refresh_token||AUTH.refresh;AUTH.exp=Date.now()+((+j.expires_in||3600)-300)*1000;lsSet("auth",AUTH);return AUTH.idToken}
+async function db(path,method,body){const t=await token();
+  const r=await tfetch(base()+path+".json?auth="+encodeURIComponent(t),{method:method||"GET",headers:body!==undefined?{"Content-Type":"application/json"}:undefined,body:body!==undefined?JSON.stringify(body):undefined});
+  if(r.status===401){AUTH.exp=0;throw new Error("HTTP 401")}
+  if(!r.ok){const e=new Error("HTTP "+r.status);e.status=r.status;throw e}return r.json()}
+async function loadMeta(){const r=await tfetch(base()+"/pub/meta.json");if(!r.ok)throw new Error("HTTP "+r.status);const m=await r.json();if(m){META=m;lsSet("meta",m)}return m}
+async function loadPub(){const uid=AUTH.uid;
+  const [p,inn]=await Promise.all([db("/pub/u/"+seg(uid)),db("/in/"+seg(uid)).catch(()=>null)]);
+  if(!p)throw new Error("NOPUB");PUB=p;lsSet("pub",p);
+  INC={};if(inn)for(const cm in inn)for(const s in inn[cm]||{})INC[cm+"#"+s]=inn[cm][s];lsSet("inc",INC);return p}
+
+/* ---------- valeurs affichées ---------- */
+const key=(cm,sq)=>cm+"#s"+sq;
+function pubVal(cm,sq,id){const n=PUB&&PUB.notes&&PUB.notes[cm]&&PUB.notes[cm]["s"+sq];return n&&n[id]!==undefined?n[id]:undefined}
+function shownVal(cm,sq,id){const k=key(cm,sq),P=PEND[k];
+  if(P&&P[id]!==undefined)return P[id]==="x"?"":P[id];
+  const I=INC[k];if(I&&(+I._t||0)>(+((PUB||{}).t)||0)&&I[id]!==undefined)return I[id]==="x"?"":I[id];
+  const v=pubVal(cm,sq,id);return v===undefined?"":v}
+const locked=(cm,sq)=>!!(PUB&&PUB.lk&&PUB.lk[cm]&&PUB.lk[cm]["s"+sq]);
+const pendCount=()=>Object.values(PEND).reduce((a,o)=>a+Object.keys(o).length,0);
+const fmt=v=>v===""||v==null?"":String(v).replace(".",",");
+function parseNote(t){t=String(t).trim().replace(",",".");if(t==="")return "";if(!/^\d{1,2}(\.\d{1,2})?$/.test(t))return null;const x=parseFloat(t);return x>=0&&x<=20?x:null}
+
+/* ---------- envoi ---------- */
+async function sendKey(k){const [cm,s]=k.split("#"),sq=+s.slice(1),uid=AUTH.uid,P=PEND[k];if(!P||!Object.keys(P).length){delete PEND[k];return 0}
+  if(locked(cm,sq)){ERR[k]="Séquence verrouillée par le censeur : envoi refusé.";return 0}
+  const path="/in/"+seg(uid)+"/"+seg(cm)+"/"+s;
+  let cur=null;try{cur=await db(path)}catch(e){if(e.message==="NET"||e.message==="AUTH")throw e}
+  const body={};
+  if(cur&&(+cur._t||0)>(+((PUB||{}).t)||0))for(const id in cur)if(id!=="_t")body[id]=cur[id];
+  for(const id in P)body[id]=P[id];
+  body._t=Math.max(Date.now(),(cur&&+cur._t||0)+1);
+  try{await db(path,"PUT",body)}
+  catch(e){if(e.status===401||e.status===403){ERR[k]="Envoi refusé par le serveur (séquence verrouillée ou classe retirée). Demandez à l'administration de synchroniser.";return 0}throw e}
+  const n=Object.keys(P).length;delete PEND[k];delete ERR[k];INC[k]=body;return n}
+async function syncAll(manual){
+  if(BUSY||!AUTH)return;
+  if(!navigator.onLine){if(manual)toast("Pas de réseau : les notes restent sur le téléphone");netBar();return}
+  BUSY=true;netBar();let sent=0,fail="";
+  try{
+    try{await loadPub()}catch(e){if(e.message==="NOPUB")throw e;if(e.message!=="NET"&&!PUB)throw e}
+    for(const k of Object.keys(PEND)){try{sent+=await sendKey(k)}catch(e){fail=e.message;break}}
+    lsSet("pend",PEND);lsSet("inc",INC);lsSet("err",ERR);lsSet("last",Date.now());
+    if(fail==="AUTH"){toast("Session expirée : reconnectez-vous avec votre code");logout(true);return}
+    if(fail)toast("Envoi interrompu (réseau faible). Nouvel essai automatique.");
+    else if(sent)toast("✓ "+sent+" note(s) envoyée(s)");
+    else if(manual)toast(Object.keys(ERR).length?"Certaines notes ont été refusées : voir en rouge":"✓ Tout est à jour");
+  }catch(e){
+    if(e.message==="AUTH"){toast("Session expirée : reconnectez-vous avec votre code");BUSY=false;logout(true);return}
+    if(e.message==="NOPUB")toast("Vos classes ne sont pas encore publiées : demandez à l'administration de synchroniser.");
+    else if(manual)toast(e.message==="NET"?"Réseau trop faible, nouvel essai plus tard":"Erreur : "+e.message);
+  }finally{BUSY=false;netBar();if(!document.activeElement||document.activeElement.tagName!=="INPUT")render()}}
+
+/* ---------- barre réseau ---------- */
+function netBar(){const n=pendCount(),on=navigator.onLine,bar=$("#net");
+  bar.style.display=AUTH?"flex":"none";bar.classList.toggle("off",!on);
+  const last=lsGet("last",0);
+  $("#netT").textContent=(BUSY?"⏳ Envoi en cours…":on?"En ligne":"Hors ligne")+" · "+(n?n+" note(s) en attente d'envoi":"rien en attente")+(last&&!n&&!BUSY?" · "+new Date(last).toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"}):"");
+  $("#netB").disabled=BUSY||!on}
+addEventListener("online",()=>{netBar();syncAll(false)});
+addEventListener("offline",netBar);
+setInterval(()=>{if(AUTH&&navigator.onLine&&pendCount())syncAll(false)},45000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&AUTH&&navigator.onLine)syncAll(false)});
+
+/* ---------- écrans ---------- */
+function head(){const e=(META&&META.etab)||"",a=(META&&META.annee)||"";
+  $("#hT").textContent=e||"EdoumMoya — Notes";
+  $("#hS").textContent=AUTH?(AUTH.nom+(a?" · "+a:"")):("Saisie des notes"+(a?" · "+a:""))}
+function render(){head();netBar();const A=$("#app");
+  if(!CFG){A.innerHTML=`<div class="card"><h2>Lien incomplet</h2><p>Ouvrez cette page avec le <b>lien envoyé par votre établissement</b> (WhatsApp ou SMS). Il contient l'adresse de votre lycée.</p></div>${foot()}`;return}
+  if(!AUTH)return viewLogin();
+  if(CUR)return viewSaisie();
+  return viewHome()}
+const foot=()=>`<div class="foot">edoummoya · page enseignant v${APPV}</div>`;
+
+/* connexion */
+let LSEL=null;
+function viewLogin(){const names=(META&&META.names)||{},L=Object.keys(names).map(id=>({id,n:names[id]})).sort((a,b)=>a.n.localeCompare(b.n,"fr"));
+  $("#app").innerHTML=`<div class="card"><h2>Connexion de l'enseignant</h2>
+  ${L.length?`<label>Votre nom</label><input id="lN" autocomplete="off" placeholder="Tapez les premières lettres…" value="${esc(LSEL?names[LSEL]:"")}">
+  <div class="sug" id="lS" style="display:none"></div>
+  <label>Votre code personnel</label><input id="lC" type="password" autocomplete="current-password" autocapitalize="characters" maxlength="12" placeholder="Code remis par l'administration">
+  <button class="btn full" id="lB" onclick="doLogin()">Se connecter</button><div class="err" id="lE"></div>
+  <p class="muted" style="margin-top:12px">Après la première connexion, vous pourrez saisir vos notes <b>même sans réseau</b> : elles partiront dès que le téléphone captera.</p>`
+  :`<p>${navigator.onLine?"Chargement de la liste des enseignants…":"Pas de réseau. La première connexion demande internet."}</p><button class="btn sec full" onclick="initMeta(true)">Réessayer</button>`}</div>${foot()}`;
+  const N=$("#lN");if(!N)return;
+  const show=()=>{const q=N.value.trim().toLowerCase(),S=$("#lS");const m=q?L.filter(x=>x.n.toLowerCase().includes(q)).slice(0,12):[];
+    if(LSEL&&names[LSEL]===N.value){S.style.display="none";return}LSEL=null;
+    S.innerHTML=m.map(x=>`<div data-id="${esc(x.id)}">${esc(x.n)}</div>`).join("")||(q?'<div class="muted">Aucun nom ne correspond</div>':"");S.style.display=q?"block":"none"};
+  N.oninput=show;
+  $("#lS").onclick=e=>{const d=e.target.closest("[data-id]");if(!d)return;LSEL=d.dataset.id;N.value=names[LSEL];$("#lS").style.display="none";$("#lC").focus()};
+  $("#lC").onkeydown=e=>{if(e.key==="Enter")doLogin()}}
+async function doLogin(){const E=$("#lE"),names=(META&&META.names)||{};E.textContent="";
+  if(!LSEL){const v=$("#lN").value.trim().toLowerCase(),m=Object.keys(names).filter(id=>names[id].toLowerCase()===v);if(m.length===1)LSEL=m[0]}
+  if(!LSEL){E.textContent="Choisissez votre nom dans la liste.";return}
+  const code=$("#lC").value.trim().toUpperCase();if(code.length<6){E.textContent="Le code compte au moins 6 caractères.";return}
+  if(!navigator.onLine){E.textContent="Pas de réseau : la connexion demande internet.";return}
+  const B=$("#lB");B.disabled=true;B.textContent="Connexion…";
+  try{const j=await authCall("signInWithPassword",{email:mailOf(LSEL),password:code,returnSecureToken:true});
+    AUTH={uid:j.localId,id:LSEL,nom:names[LSEL],idToken:j.idToken,refresh:j.refreshToken,exp:Date.now()+((+j.expiresIn||3600)-300)*1000};
+    lsSet("auth",AUTH);PEND=lsGet("pend",{});
+    try{await loadPub();lsSet("last",Date.now())}catch(e){if(e.message==="NOPUB")toast("Vos classes ne sont pas encore publiées : demandez à l'administration de synchroniser.")}
+    CUR=null;render();if(pendCount())syncAll(false)}
+  catch(e){const m=e.message;E.textContent=/INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test(m)?"Nom ou code incorrect. Le code a peut-être changé : demandez-le à l'administration.":/TOO_MANY_ATTEMPTS/.test(m)?"Trop d'essais. Patientez quelques minutes.":m==="NET"?"Réseau trop faible, réessayez.":"Erreur : "+m;
+    B.disabled=false;B.textContent="Se connecter"}}
+function logout(keep){if(!keep&&pendCount()&&!confirm(pendCount()+" note(s) ne sont pas encore envoyées. Elles resteront sur ce téléphone et partiront à votre prochaine connexion. Se déconnecter ?"))return;
+  AUTH=null;CUR=null;lsDel("auth");lsDel("pub");PUB=null;render()}
+
+/* accueil */
+function viewHome(){const P=PUB;
+  if(!P){$("#app").innerHTML=`<div class="card"><h2>Bonjour ${esc(AUTH.nom)}</h2><p>Vos classes ne sont pas encore disponibles sur ce téléphone.</p><p class="muted">Il faut du réseau, et l'administration doit avoir synchronisé EdoumMoya après vous avoir attribué vos matières.</p><button class="btn full" onclick="syncAll(true)">Réessayer</button><button class="btn sec full" onclick="logout()">Déconnexion</button></div>${foot()}`;return}
+  const items=(P.items||[]).slice().sort((a,b)=>(a.c+a.m).localeCompare(b.c+b.m,"fr"));
+  $("#app").innerHTML=`<div class="card"><h2>Mes classes et matières</h2>
+  ${items.map((it,i)=>{const nP=SEQ.reduce((a,s)=>a+Object.keys(PEND[key(it.cm,s)]||{}).length,0),nE=SEQ.some(s=>ERR[key(it.cm,s)]);
+    return `<div class="item" onclick="openItem(${i})"><div class="grow"><b>${esc(it.c)}</b><span class="muted">${esc(it.m)}</span></div>${nE?'<span class="badge" style="background:#fdecea;color:#c0392b">refusé</span>':nP?`<span class="badge">${nP} en attente</span>`:'<span class="badge g">à jour</span>'}<span>›</span></div>`}).join("")||'<p class="muted">Aucune matière ne vous est attribuée.</p>'}
+  <p class="muted">Listes publiées le ${P.t?new Date(P.t).toLocaleString("fr-FR"):"?"}.</p></div>
+  <div class="card"><button class="btn sec full" style="margin-top:0" onclick="syncAll(true)">🔄 Actualiser mes listes</button><button class="btn sec full" onclick="logout()">Déconnexion</button>
+  <p class="muted" style="margin-top:10px">Astuce : menu du navigateur › <b>Ajouter à l'écran d'accueil</b> pour ouvrir la page comme une application, même sans réseau.</p></div>${foot()}`;
+  window._items=items}
+function openItem(i){const it=window._items[i];const lastS=lsGet("seq_"+it.cm,null);
+  let sq=lastS||SEQ.find(s=>!locked(it.cm,s))||1;CUR={cm:it.cm,cid:it.cid,c:it.c,m:it.m,sq};render();scrollTo(0,0)}
+
+/* saisie */
+function viewSaisie(){const C=CUR,P=PUB,cls=(P.cls&&P.cls[C.cid])||{el:[]},el=cls.el||[],k=key(C.cm,C.sq),lk=locked(C.cm,C.sq);
+  $("#app").innerHTML=`<div class="card"><div style="display:flex;align-items:center;gap:8px"><button class="btn sm sec" onclick="CUR=null;render()">‹ Retour</button><div style="flex:1;min-width:0"><b>${esc(C.c)}</b><div class="muted">${esc(C.m)}</div></div></div>
+  <label>Séquence</label><div class="seqs">${SEQ.map(s=>{const n=Object.keys(PEND[key(C.cm,s)]||{}).length;return `<button class="${s===C.sq?"on":""}" onclick="setSeq(${s})">${locked(C.cm,s)?"🔒 ":""}Séq. ${s}<small>Trim. ${Math.ceil(s/2)}${n?" · "+n+" ⏳":""}</small></button>`}).join("")}</div>
+  ${lk?'<div class="lock">🔒 Cette séquence est verrouillée par le censeur : consultation seulement.</div>':""}
+  ${ERR[k]?`<div class="lock">⚠ ${esc(ERR[k])} <button class="btn sm sec" onclick="dropErr('${esc(k)}')">Effacer ce message</button></div>`:""}
+  <div class="stats" id="st"></div>
+  <table>${el.map((e,i)=>{const v=shownVal(C.cm,C.sq,e[0]),pd=PEND[k]&&PEND[k][e[0]]!==undefined;
+    return `<tr><td class="n">${i+1}</td><td class="nm">${esc(e[1])}</td><td class="in"><input inputmode="decimal" enterkeyhint="next" data-id="${esc(e[0])}" value="${esc(fmt(v))}" class="${pd?"pend":""}" ${lk?"disabled":""} placeholder="—"></td></tr>`}).join("")||'<tr><td class="muted">Aucun élève dans cette classe.</td></tr>'}</table>
+  <div class="bar"><button class="btn ok" onclick="syncAll(true)" ${lk?"disabled":""}>📤 Envoyer les notes</button></div>
+  <p class="muted">Chaque note est gardée sur le téléphone dès sa saisie. L'envoi se fait tout seul quand il y a du réseau ; le bouton sert à forcer l'envoi.</p></div>${foot()}`;
+  const ins=[...document.querySelectorAll("td.in input")];
+  ins.forEach((inp,i)=>{inp.onchange=()=>cellChange(inp);inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();cellChange(inp);(ins[i+1]||inp).focus();if(!ins[i+1])inp.blur()}}});
+  stats()}
+function setSeq(s){CUR.sq=s;lsSet("seq_"+CUR.cm,s);render()}
+function dropErr(k){delete ERR[k];lsSet("err",ERR);render()}
+function cellChange(inp){const C=CUR,k=key(C.cm,C.sq),id=inp.dataset.id,v=parseNote(inp.value);
+  if(v===null){inp.classList.add("bad");toast("Note invalide : entre 0 et 20 (ex. 12,5)");return}
+  inp.classList.remove("bad");
+  const P=PEND[k]=PEND[k]||{};
+  const before=(()=>{const I=INC[k];if(I&&(+I._t||0)>(+((PUB||{}).t)||0)&&I[id]!==undefined)return I[id]==="x"?"":I[id];const x=pubVal(C.cm,C.sq,id);return x===undefined?"":x})();
+  if(v===before){delete P[id]}else P[id]=(v===""?"x":v);
+  if(!Object.keys(P).length)delete PEND[k];
+  inp.value=fmt(v);inp.classList.toggle("pend",!!(PEND[k]&&PEND[k][id]!==undefined));
+  lsSet("pend",PEND);netBar();stats();
+  clearTimeout(window._sT);window._sT=setTimeout(()=>{if(navigator.onLine)syncAll(false)},8000)}
+function stats(){const C=CUR;if(!C)return;const el=((PUB.cls||{})[C.cid]||{}).el||[];const vals=el.map(e=>shownVal(C.cm,C.sq,e[0])).filter(v=>v!==""&&v!=null).map(Number);
+  const n=vals.length,m=n?vals.reduce((a,b)=>a+b,0)/n:0,ok=vals.filter(v=>v>=10).length;
+  const S=$("#st");if(S)S.innerHTML=`<span>Saisies : <b>${n}/${el.length}</b></span>${n?`<span>Moyenne : <b>${m.toFixed(2).replace(".",",")}</b></span><span>≥ 10 : <b>${ok}</b> (${Math.round(ok*100/n)} %)</span><span>Min ${fmt(Math.min(...vals))} · Max ${fmt(Math.max(...vals))}</span>`:""}`}
+
+/* ---------- démarrage ---------- */
+async function initMeta(manual){if(!CFG)return;try{await loadMeta()}catch(e){if(manual)toast("Impossible de joindre la base : vérifiez le réseau")}if(!AUTH)render();else head()}
+if(CFG){loadState();render();initMeta(false);if(AUTH&&navigator.onLine)syncAll(false)}else render();
+if("serviceWorker" in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").catch(()=>{});
+</script>
+</body>
+</html>
